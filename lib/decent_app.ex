@@ -4,7 +4,9 @@ defmodule DecentApp do
   @avaible_commands ["DUP", "POP", "NOTHING", "COINS", "+", "-", "*"]
 
   def call(%Balance{} = balance, commands) do
-    call({balance, [], false}, commands)
+    Task.Supervisor.async(DecentApp.TaskSupervisor, fn ->
+      call({balance, [], false}, commands)
+    end)
   end
 
   def call({bal, res, err}, [command | tail]) do
@@ -118,8 +120,6 @@ defmodule DecentApp do
   end
 
   def call({bal, res, err}, []) do
-    {bal, res, err}
-
     if err do
       -1
     else
