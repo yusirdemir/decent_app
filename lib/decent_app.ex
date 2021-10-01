@@ -1,6 +1,8 @@
 defmodule DecentApp do
   alias DecentApp.Balance
 
+  @avaible_commands ["DUP", "POP", "NOTHING", "COINS", "+", "-", "*"]
+
   def call(%Balance{} = balance, commands) do
     {balance, result, error} =
       Enum.reduce(commands, {balance, [], false}, fn command, {bal, res, error} ->
@@ -38,9 +40,8 @@ defmodule DecentApp do
                   false
                 end
 
-              command != "NOTHING" && command != "DUP" && command != "POP" && command != "+" &&
-                command != "-" && command != "*" && command != "COINS" && !is_integer(command) ->
-                true
+              command in @avaible_commands || is_integer(command) ->
+                false
 
               true ->
                 false
